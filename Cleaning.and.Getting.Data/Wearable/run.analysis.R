@@ -4,6 +4,7 @@
 setwd("~/Desktop/Git/Cleaning.and.Getting.Data/Wearable")
 library(dplyr)
 library(plyr)
+library(data.table)
 
 
 # 1 -Check if the directory exists in the wd, if not create a directory, download and extract the files & setwd
@@ -50,7 +51,6 @@ Data.Final$Activity.ID <- sapply(Data.Final$Activity.ID, function(x) Activity.La
 
 
 # Question 4: Appropriately labels the data set with descriptive variable names
-
 names(Data.Final) <- gsub("Acc", " Acceleration", names(Data.Final))
 names(Data.Final) <- gsub("Gyro", " Gyroscope", names(Data.Final))
 names(Data.Final) <- gsub("Mag", " Magnitude", names(Data.Final))
@@ -58,5 +58,7 @@ names(Data.Final) <- gsub("^t", "Time ", names(Data.Final))
 names(Data.Final) <- gsub("^f", "Frequency ", names(Data.Final))
 
 
-# Question 5: From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject
+# Question 5: From the data set in step 4, creates a second, independent tidy data & ...
+# ... set with the average of each variable for each activity and each subject
 
+Data.Final.Average <- data.table(Data.Final)
