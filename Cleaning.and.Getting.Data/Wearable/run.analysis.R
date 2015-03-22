@@ -1,13 +1,13 @@
 # Getting & Cleaning Data - Project Course Assignment
 
-# A- Set the working directory & load appropriate packages
-setwd("~/Desktop/Git/Cleaning.and.Getting.Data/Wearable")
+# A- Load appropriate packages
 library(dplyr)
 library(plyr)
 library(data.table)
 
 
-# 1 -Check if the directory exists in the wd, if not create a directory, download and extract the files & setwd
+# 1- Check if the directory exists in the wd, if not create a directory, download and extract the files
+setwd("~/Desktop/Git/Cleaning.and.Getting.Data/Wearable")
 if(!file.exists("~/Wearable")){
         dir.create("~/Wearable")
         Zip.File <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
@@ -15,6 +15,7 @@ if(!file.exists("~/Wearable")){
         unzip ("~/Desktop/Coursera/Wearable/Wearable.zip", exdir = "./Wearable")
 }
 
+setwd("~/Desktop/Git/Cleaning.and.Getting.Data/Wearable")
 # Question 1: Merges the training and the test sets to create one data set
 
 # 1a- Load the X_test = test set, y_test = test labels , subject_test = test subject
@@ -46,7 +47,7 @@ Data.Final <- Data[,grepl("mean|std|Activity.ID|Subjects",colnames(Data))]
 # 3a- Load the activity labels
 Activity.Labels <-read.table("~/Desktop/Coursera/Wearable/UCI HAR Dataset/activity_labels.txt", header = FALSE, sep="")
 
-# 3b -Link the descritpive activity labels in the Dataset (Activity.ID)
+# 3b- Link the descritpive activity labels in the Dataset (Activity.ID)
 Data.Final$Activity.ID <- sapply(Data.Final$Activity.ID, function(x) Activity.Labels[x,2])
 
 
@@ -61,4 +62,12 @@ names(Data.Final) <- gsub("^f", "Frequency ", names(Data.Final))
 # Question 5: From the data set in step 4, creates a second, independent tidy data & ...
 # ... set with the average of each variable for each activity and each subject
 
+# 5a- Create a new tidy data
 Data.Final.Average <- data.table(Data.Final)
+
+# 5b- Apply the mean per subjects, per activity
+Tidy <- Data.Final.Average[, lapply(.SD, mean), by = c("Subjects", "Activity.ID")]
+
+# 5c- Save the table as txt
+write.table(Tidy, file = "Tidy.txt", row.names = FALSE)
+
