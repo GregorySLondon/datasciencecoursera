@@ -64,32 +64,32 @@ Before starting with the code itself, It is important to install/load the packag
 
 **Question1**
 
-	1. Load the Test datasets and attach the Activity number as well as the Subjects performing the Test (“Test” data frame).
+1. Load the Test datasets and attach the Activity number as well as the Subjects performing the Test (“Test” data frame).
 	
-	2. Load the Training datasets and attach the Activity number as well as the Subjects performing the Training (“Train” data frame).
+2. Load the Training datasets and attach the Activity number as well as the Subjects performing the Training (“Train” data frame).
 	
-	3. Bind the 2 data frame together to get only one (“Data” data frame).
+3. Bind the 2 data frame together to get only one (“Data” data frame).
 	
-	4. Load the features describing the columns of the dataset and name the columns with the right features.
+4. Load the features describing the columns of the dataset and name the columns with the right features.
 
 **Question2**
 
-	1. Select the columns containing the mean, the std (standard deviation) measurements as well as the activity and the subject references (“Data.Final” data frame).
+1. Select the columns containing the mean, the std (standard deviation) measurements as well as the activity and the subject references (“Data.Final” data frame).
 
 **Question3**	
 
-	1. Load the activity labels in R (“Activity.Labels” data frame)
+1. Load the activity labels in R (“Activity.Labels” data frame)
 	
-	2. Rename the activity in the Data.Final to have the activity labels instead of the numbers
+2. Rename the activity in the Data.Final to have the activity labels instead of the numbers
 
 **Question4**
 
-	1. Renaming accordingly to features_info the Data.Final variables
+1. Renaming accordingly to features_info the Data.Final variables
 
 **Question5**
 
-	1. Create a new tidy data frame from Data.Final (“Data.Final.Average” data.frame)
+1. Create a new tidy data frame from Data.Final (“Data.Final.Average” data.frame)
 	
-	2. Calculate the average of each variable for each activity and each subject (“Tidy” data frame”).
+2. Calculate the average of each variable for each activity and each subject (“Tidy” data frame”).
 	
-	3. Save the output to a text file with the write.table function (“Tidy.txt”)
+3. Save the output to a text file with the write.table function (“Tidy.txt”)
