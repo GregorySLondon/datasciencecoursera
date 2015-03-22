@@ -1,5 +1,6 @@
 # Getting & Cleaning Data - Project Course Assignment
 
+
 # A- Load appropriate packages
 library(dplyr)
 library(plyr)
@@ -7,7 +8,10 @@ library(data.table)
 
 
 # 1- Check if the directory exists in the wd, if not create a directory, download and extract the files
-setwd("~/Desktop/Git/Cleaning.and.Getting.Data/Wearable")
+
+# Set the working directory to store the files
+setwd("~/Desktop/Coursera/Wearable")
+
 if(!file.exists("~/Wearable")){
         dir.create("~/Wearable")
         Zip.File <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
@@ -15,7 +19,7 @@ if(!file.exists("~/Wearable")){
         unzip ("~/Desktop/Coursera/Wearable/Wearable.zip", exdir = "./Wearable")
 }
 
-setwd("~/Desktop/Git/Cleaning.and.Getting.Data/Wearable")
+
 # Question 1: Merges the training and the test sets to create one data set
 
 # 1a- Load the X_test = test set, y_test = test labels , subject_test = test subject
@@ -70,4 +74,3 @@ Tidy <- Data.Final.Average[, lapply(.SD, mean), by = c("Subjects", "Activity.ID"
 
 # 5c- Save the table as txt
 write.table(Tidy, file = "Tidy.txt", row.names = FALSE)
-

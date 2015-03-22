@@ -59,34 +59,37 @@ Before starting with the code itself, It is important to install/load the packag
 **General:**
 
 * Check if a file /Wearable already exists in the working directory, if not already downloaded. Create the file, download it and unzip it in the working directory.
-* Reset the working directory to work in the Git account to upload the R code once finished.
+
 
 
 **Question1**
 
-	1_ Load the Test datasets and attach the Activity number as well as the Subjects performing the Test (“Test” data frame).
+	1. Load the Test datasets and attach the Activity number as well as the Subjects performing the Test (“Test” data frame).
 	
-	2_ Load the Training datasets and attach the Activity number as well as the Subjects performing the Training (“Train” data frame).
+	2. Load the Training datasets and attach the Activity number as well as the Subjects performing the Training (“Train” data frame).
 	
-	3_ Bind the 2 data frame together to get only one (“Data” data frame).
+	3. Bind the 2 data frame together to get only one (“Data” data frame).
 	
-	4_ Load the features describing the columns of the dataset and name the columns with the right features.
+	4. Load the features describing the columns of the dataset and name the columns with the right features.
 
 **Question2**
 
-	1_ Select the columns containing the mean, the std (standard deviation) measurements as well as the activity and the subject references (“Data.Final” data frame).
+	1. Select the columns containing the mean, the std (standard deviation) measurements as well as the activity and the subject references (“Data.Final” data frame).
 
 **Question3**	
 
-	1_ Load the activity labels in R (“Activity.Labels” data frame)
-	2_ Rename the activity in the Data.Final to have the activity labels instead of the numbers
+	1. Load the activity labels in R (“Activity.Labels” data frame)
+	
+	2. Rename the activity in the Data.Final to have the activity labels instead of the numbers
 
 **Question4**
 
-	1_ Renaming accordingly to features_info the Data.Final variables
+	1. Renaming accordingly to features_info the Data.Final variables
 
 **Question5**
 
-	1_ Create a new tidy data frame from Data.Final (“Data.Final.Average” data.frame)
-	2_ Calculate the average of each variable for each activity and each subject (“Tidy” data frame”).
-	3_ Save the output to a text file with the write.table function (“Tidy.txt”)
+	1. Create a new tidy data frame from Data.Final (“Data.Final.Average” data.frame)
+	
+	2. Calculate the average of each variable for each activity and each subject (“Tidy” data frame”).
+	
+	3. Save the output to a text file with the write.table function (“Tidy.txt”)
