@@ -39,7 +39,7 @@ plot(Data_Final$Date_Time, Data_Final$Voltage, type = "l", xlab = "datetime", yl
 plot(Data_Final$Date_Time, Data_Final$Sub_metering_1, type = "l", xlab = "", ylab = "Energy sub metering")
 lines(Data_Final$Date_Time, Data_Final$Sub_metering_2, col = "red")
 lines(Data_Final$Date_Time, Data_Final$Sub_metering_3, col = "blue")
-legend("topright", col = c("black", "red", "blue"), c("Sub_metering_1 ", "Sub_metering_2 ", "Sub_metering_3 "),
+legend("topright", col = c("black", "red", "blue"), c("Sub_metering_1  ", "Sub_metering_2  ", "Sub_metering_3  "),
        lty = c(1, 1), bty = "n", cex = .5)
 
 # 5- Plot 4
