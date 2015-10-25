@@ -1,0 +1,172 @@
+---
+title: "Practical Machine Learning Project"
+author: "G. S"
+date: "25 October 2015"
+output:
+  html_document:
+    keep_md: yes
+---
+
+# PROJECT DESCRIPTION
+
+## Background
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset). 
+
+## Data
+The training data for this project are available here: 
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+
+The test data are available here: 
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+
+The data for this project come from this source: 
+http://groupware.les.inf.puc-rio.br/har. 
+If you use the document you create for this class for any purpose please cite them as they have been very generous in allowing their data to be used for this kind of assignment.
+
+## Project objective
+The goal of your project is to predict the manner in which they did the exercise. This is the “classe” variable in the training set. You may use any of the other variables to predict with. You should create a report describing how you built your model, how you used cross validation, what you think the expected out of sample error is, and why you made the choices you did. You will also use your prediction model to predict 20 different test cases.
+
+# Libraries
+```{r}
+library(caret)
+library(rpart)
+library(rpart.plot)
+library(RColorBrewer)
+library(rattle)
+library(randomForest)
+library(knitr)
+library(e1071)
+library(gbm)
+```
+
+# Getting the data
+```{r}
+set.seed(100)
+
+train_URL <- "http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+test_URL <- "http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+
+Training <- read.csv(url(train_URL), na.strings = c("NA","#DIV/0!",""))
+Testing <- read.csv(url(test_URL), na.strings = c("NA","#DIV/0!",""))
+
+# Splitting the training set in 2
+inTrain <- createDataPartition(Training$classe, p = 0.6, list = FALSE)
+myTraining <- Training[inTrain, ]
+myTesting <- Training[-inTrain, ]
+
+# Dimensions of the 2 sets
+dim(myTraining)
+dim(myTesting)
+```
+
+# Cleaning the data
+## Removing NearZeroVariance variables
+```{r}
+NZV <- nearZeroVar(myTraining, saveMetrics = TRUE)
+myTraining <- myTraining[,NZV$nzv == FALSE]
+
+NZV <- nearZeroVar(myTesting,saveMetrics = TRUE)
+myTesting <- myTesting[,NZV$nzv == FALSE]
+
+# Removing the first column of the myTraining data set
+myTraining <- myTraining[c(-1)]
+
+# Cleaning the variables with more than 60% N.A.
+trainingV3 <- myTraining
+for(i in 1:length(myTraining)) {
+    if(sum(is.na(myTraining[, i]))/nrow(myTraining) >= .7) {
+        for(j in 1:length(trainingV3)) {
+            if(length(grep(names(myTraining[i]), names(trainingV3)[j])) == 1)  {
+                trainingV3 <- trainingV3[ , -j]
+            }   
+        } 
+    }
+}
+
+# Re-applying the original name
+myTraining <- trainingV3
+rm(trainingV3)
+
+# Transforming the data sets
+T_Clean_1 <- colnames(myTraining)
+
+# Removing the classe column
+T_Clean_2 <- colnames(myTraining[, -58])
+
+# Re-writing the myTesting variables with myTraining variables
+myTesting <- myTesting[T_Clean_1]
+testing <- Testing[T_Clean_2]
+
+# Dimensions of the 2 sets
+dim(myTesting)
+dim(testing)
+
+# Coercing the data into the same type
+for (i in 1:length(testing)) {
+    for(j in 1:length(myTraining)) {
+        if(length(grep(names(myTraining[i]), names(testing)[j])) == 1)  {
+            class(testing[j]) <- class(myTraining[i])
+        }      
+    }      
+}
+
+# Seting the same class for the 2 sets
+testing <- rbind(myTraining[2, -58], testing)
+testing <- testing[-1, ]
+```
+
+# Decision trees model
+```{r}
+set.seed(100)
+Dec_Tree_1 <- rpart(classe ~ ., data = myTraining, method = "class")
+fancyRpartPlot(Dec_Tree_1)
+
+Pred_DT <- predict(Dec_Tree_1, myTesting, type = "class")
+Dec_Tree_CM <- confusionMatrix(Pred_DT, myTesting$classe)
+Dec_Tree_CM
+```
+
+# Random forests model
+```{r}
+set.seed(100)
+Ran_For_1 <- randomForest(classe ~ ., data = myTraining)
+Pred_RF <- predict(Ran_For_1, myTesting, type = "class")
+Ran_For_CM <- confusionMatrix(Pred_RF, myTesting$classe)
+Ran_For_CM
+plot(Ran_For_1)
+```
+
+# Boosted regression model
+```{r}
+set.seed(100)
+Fit_Control <- trainControl(method = "repeatedcv", number = 5, repeats = 1)
+
+Boo_Reg_1 <- train(classe ~ ., data=myTraining, method = "gbm",
+                   trControl = Fit_Control, verbose = FALSE)
+
+Boo_Reg_Pred <- predict(Boo_Reg_1, newdata = myTesting)
+Boo_Reg_Acc <- confusionMatrix(Boo_Reg_Pred, myTesting$classe)
+Boo_Reg_Acc
+plot(Boo_Reg_1, ylim = c(0.9, 1))
+```
+
+#Predicting Results on the Test Data
+Random Forests gave an Accuracy in the myTesting dataset of 99.89%, which was more accurate that what I got from the Decision Trees or GBM. The expected out-of-sample error is 100-99.89 = 0.11%.
+
+```{r}
+Pred_2 <- predict(Ran_For_1, testing, type = "class")
+Pred_2
+
+# Submisson text file
+pml_write_files = function(x){
+    n = length(x)
+    for(i in 1:n){
+        filename = paste0("problem_id_",i,".txt")
+        write.table(x[i], 
+                    file = filename, 
+                    quote = FALSE, 
+                    row.names = FALSE, 
+                    col.names=FALSE)
+    }
+}
+```
